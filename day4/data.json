@@ -1,0 +1,20 @@
+{
+    "headers": [
+        "name",
+        "city"
+    ],
+    "data": [
+        {
+            "name": "arun",
+            "city": "chennai"
+        },
+        {
+            "name": "akash",
+            "city": "chennai"
+        },
+        {
+            "name": "aravind",
+            "city": "chennai"
+        }
+    ]
+}

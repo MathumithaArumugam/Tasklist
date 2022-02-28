@@ -1,0 +1,222 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+
+    <style>
+        .modal-header,
+        h4,
+        .close {
+            background-color: #b85c73;
+            color: rgb(255, 255, 255) !important;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<h1>
+    <center>My Tasks</center>
+</h1>
+<br />
+<br />
+
+<body>
+    <div class="row">
+        <div class="text-center">
+            <div class="col-md-12">
+                <img class="img-responsive img-thumbnail" src="img.jfif" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-1">
+
+        </div>
+        <div class="col-sm-10">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hovered datta1">
+                    <thead>
+                        <th> Task Name </th>
+                        <th> Task Time </th>
+                        <th> Action </th>
+                    </thead>
+                    <tbody id=" tablebody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-1">
+
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <h1>
+        <center><u>Add Tasks</u></center>
+    </h1>
+
+    <center>
+
+        <table class="table" style="width: 50%; text-align: center;">
+            <div class="container">
+                <button type="button" class="btn btn-default btn-lg" id="myBtn">Add Tasks</button>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding:35px 50px;">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4><span class="glyphicon glyphicon-list-alt"></span>Push tasks</h4>
+                            </div>
+                            <div class="modal-body" style="padding:40px 50px;">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label for="TaskName"><span class="glyphicon glyphicon-tasks"></span>
+                                            Task Name</label>
+                                        <input type="text" class="form-control" id="taskname"
+                                            placeholder="Enter taskname">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TaskTime"><span class="glyphicon glyphicon-time"></span>
+                                            Task Time</label>
+                                        <input type="datetime-local" class="form-control" id="tasktime"
+                                            placeholder="Enter tasktime">
+                                    </div>
+
+                                    <button id="addtask" type="button" class="btn btn-success btn-block"><span
+                                            class="glyphicon glyphicon-off"></span>Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-default pull-left"
+                                    data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>
+                                    Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#myBtn").click(function () {
+                        $("#myModal").modal();
+                    });
+                });
+            </script>
+
+        </table>
+
+    </center>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <h1>
+        <center><u>Completed Tasks</u></center>
+    </h1>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <div class="table-responsive table-bordered">
+                <table class="table table-condensed datta2">
+                    <thead>
+                        <th> Task Name </th>
+                        <th> Task Time </th>
+                    </thead>
+                    <tbody id="completedtable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+    <script>
+        taskid = 1;
+        taskadd = document.getElementById("addtask");
+        tablebody = document.getElementById("tablebody");
+        taskname = document.getElementById("taskname");
+        tasktime = document.getElementById("tasktime");
+        var datta1 = null;
+        var datta2 = null;
+        window.addEventListener("load",function(){
+            var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(JSON.parse(this.responseText));
+                    }
+                };
+                xhttp.open("GET", "http://localhost:81/api/GET", true);
+                xhttp.send();
+        });
+        taskadd.addEventListener("click", function () {
+            if (taskname.value != "" && tasktime.value != "") {
+                console.log(taskname);
+                console.log(tasktime);
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        if(this.responseText.startsWith("OK"))
+                        {
+                            var id=this.responseText.split("OK")[1];
+                            datta1.row.add([taskname.value, tasktime.value, "<button type=\"button\" class=\"btn btn-success\" onclick=\"deletetask("+id+",'" + taskname.value + "','" + tasktime.value + "');\"> Done </button>"]).draw(false);
+                        }
+                    }
+                };
+                xhttp.open("GET", "http://localhost:81/api/PUT?tname="+taskname.value+"&ttime="+tasktime.value, true);
+                xhttp.send();
+            }
+            else {
+                alert("Enter Proper Values");
+            }
+        });
+        var ctable = document.getElementById("completedtable");
+        function deletetask(taskid,taskname, tasktime) {
+            var found = false;
+            if (confirm("Are you sure want to mark this task as completed?")) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        if(this.responseText.startsWith("OK"))
+                        {
+                            datta1.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                                var data = this.data();
+                                if (data[0] == taskname && data[1] == tasktime) {
+                                    if (!found) {
+                                        datta1.row(this).remove().draw();
+                                        datta2.row.add([taskname, tasktime]).draw(false);
+                                    }
+                                    found = true;
+                                }
+                            });
+                        }
+                    }
+                };
+                xhttp.open("GET", "http://localhost:81/api/POST/"+taskid+"?status=True", true);
+                xhttp.send();
+            }
+
+        }
+        $(document).ready(function () {
+            datta1 = $('.datta1').DataTable();
+            datta2 = $('.datta2').DataTable();
+        });
+    </script>
+
+</html>

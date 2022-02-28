@@ -1,0 +1,80 @@
+<style>
+    .customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .customers td,
+    .customers th {
+        border: 1px solid rgb(221, 221, 221);
+        padding: 8px;
+    }
+
+    .customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .customers tr:hover {
+        background-color: #ddd;
+    }
+
+    .customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #0468aad5;
+        color: rgb(255, 255, 255);
+    }
+</style>
+<input type="file" id="data">
+<table class="customers">
+    <thead id="mathu">
+    </thead>
+    <tbody id="kishore">
+
+    </tbody>
+</table>
+<script>
+    var file = document.getElementById("data");
+    var data = "";
+    file.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+            var myFile = this.files[0];
+            var reader = new FileReader();
+
+            reader.addEventListener('load', function (e) {
+                data = e.target.result;
+                data = JSON.parse(data);
+                console.log(data);
+                createtable();
+            });
+
+            reader.readAsText(myFile);
+        }
+    });
+    function createtable() {
+        var tablehead = document.getElementById("mathu");
+        var tablebody = document.getElementById("kishore");
+        tablehead.innerHTML = "";
+        tablebody.innerHTML = "";
+        var row = "<tr>";
+        data.headers.forEach(element => {
+
+            row += "<th>" + element + "</th>";
+
+
+
+        });
+        row += "</tr>";
+        tablehead.innerHTML += row;
+        data.data.forEach(element => {
+            var row = "<tr>";
+            data.headers.forEach(element1 => {
+                row += "<td>" + element[element1] + "</td>";
+            });
+            row += "</tr>";
+            tablebody.innerHTML += row;
+        });
+    }
+</script>

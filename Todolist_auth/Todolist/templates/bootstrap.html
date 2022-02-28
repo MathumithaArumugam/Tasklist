@@ -1,0 +1,256 @@
+{% load static %}
+<html>
+{% block content %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <style>
+        .modal-header,
+        h4,
+        .close {
+            background-color: #6a5cb8;
+            color: rgb(255, 255, 255) !important;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-shadow: 0 0 3px #FF0000;
+            font-style: italic;
+
+        }
+    </style>
+</head>
+
+<h1>
+    <center><i class= "fas fa-tasks ">MY TASK LIST</i></center>
+    
+</h1>
+<br />
+<br />
+
+<body>
+    <div class="row">
+        <div class="text-center">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="text-right"><a href="/authapi/LOGOUT">Logout</a></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-1">
+
+        </div>
+        <div class="col-sm-10">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-striped table-hovered datta1">
+                    <thead>
+                        <th> Task Name </th>
+                        <th> Task Time </th>
+                        <th> Action </th>
+                    </thead>
+                    <tbody id=" tablebody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-1">
+
+        </div>
+    </div>
+
+
+    <center>
+
+        <table class="table" style="width: 50%; text-align: center;">
+            <div class="container">
+                <button type="button" class="btn btn-primary btn-lg" id="myBtn">Add Tasks</button>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding:35px 50px;">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4><span class=" glyphicon-list-alt"></span> &nbsp;Push tasks</h4>
+                            </div>
+                            <div class="modal-body" style="padding:40px 50px;">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label for="TaskName"><span class="glyphicon glyphicon-tasks"></span>
+                                            Task Name</label>
+                                        <input type="text" class="form-control" id="taskname"
+                                            placeholder="Enter taskname">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TaskTime"><span class="glyphicon glyphicon-time"></span>
+                                            Task Time</label>
+                                        <input type="datetime-local" class="form-control" id="tasktime"
+                                            placeholder="Enter tasktime">
+                                    </div>
+
+                                    <button id="addtask" type="button" class="btn btn-success btn-block"
+                                        data-dismiss="modal"><span
+                                            class="glyphicon glyphicon-off"></span>Submit</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-default pull-left"
+                                    data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>
+                                    Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+
+            <script>
+                $(document).ready(function () {
+                    $("#myBtn").click(function () {
+                        $("#myModal").modal();
+                    });
+                });
+            </script>
+
+        </table>
+
+    </center>
+
+    <script>
+        taskid = 1;
+        taskadd = document.getElementById("addtask");
+        tablebody = document.getElementById("tablebody");
+        taskname = document.getElementById("taskname");
+        tasktime = document.getElementById("tasktime");
+        var datta1 = null;
+
+        function refresh() {
+            datta1.clear().draw();
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(this.responseText);
+                    console.log(data);
+                    data.forEach(element => {
+                        if (!element.CompletionStatus)
+                            datta1.row.add([element.TaskName, element.TaskTime, "<button type=\"button\" class=\"btn btn-success\" onclick=\"deletetask(" + element.ID + ",'" + element.TaskName + "','" + element.TaskTime + "');\"> Done </button>  <button type=\"button\" class=\"btn btn-danger\"  onclick=\"deleteentry(" + element.ID + ");\"><i class= \"fas fa-trash\"></i></button>"]).draw(false);
+                        else
+                            datta1.row.add([element.TaskName, element.TaskTime, "<button type=\"button\" class=\"btn btn-success\" disabled>Completed </button> <button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteentry(" + element.ID + ");\"> <i class= \"fas fa-trash-alt fa-spin\"></i> </button>"]).draw(false);
+
+                    });
+                }
+            };
+            xhttp.open("GET", "http://localhost:81/api/GET", true);
+            xhttp.send();
+        }
+        taskadd.addEventListener("click", function () {
+            if (taskname.value != "" && tasktime.value != "") {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+
+                        refresh();
+                        taskname.value = "";
+                        tasktime.value = "";
+
+                    }
+                };
+                xhttp.open("GET", "http://localhost:81/api/PUT?tname=" + taskname.value + "&ttime=" + tasktime.value, true);
+                xhttp.send();
+            }
+            else {
+                alert("Enter Proper Values");
+            }
+        });
+        var ctable = document.getElementById("completedtable");
+        function deletetask(taskid, taskname, tasktime) {
+            var found = false;
+            swal("Are you sure want to mark this task as completed?", {
+                buttons: [" No!", "Yes!"],
+            }).then(function (value) {
+                if (value) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+
+                            refresh();
+                            swal("Good job!", "Task marked as completed!", "success", {
+                                button: "OKAY",
+                            });
+
+                        }
+                    };
+                    xhttp.open("GET", "http://localhost:81/api/POST/" + taskid + "?status=True", true);
+                    xhttp.send();
+                }
+
+            });
+
+
+        }
+        function deleteentry(taskid) {
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+
+                                refresh();
+                                swal("Your Task has been deleted!", {
+                                    icon: "success",
+                                });
+
+                            }
+                        };
+                        xhttp.open("GET", "http://localhost:81/api/DELETE/" + taskid, true);
+                        xhttp.send();
+
+
+                    } else {
+                        swal("Your Task is not Deleted!");
+                    }
+                });
+
+
+
+        }
+        $(document).ready(function () {
+            datta1 = $('.datta1').DataTable();
+            refresh();
+        });
+    </script>
+</body>
+</html>

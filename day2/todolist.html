@@ -1,0 +1,70 @@
+<html>
+    <h4> My Tasks </h4>
+    <table border="1px solid black" cellpadding="20">
+        <thead>
+            <th> Task Name </th>
+            <th> Task Time </th>
+            <th> Action </th>
+        </thead>
+        <tbody id="tablebody">
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h4> <u>Add Tasks</u></h4>
+    Task Name: <input type="text" id="taskname"> <br/>
+    Task Time: <input type="datetime-local" id="tasktime"> <br/>
+    <button type="button" id="addtask">Add Task</button>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h4> <u>Completed Tasks</u></h4>
+    <table border="1px solid black" cellpadding="20">
+        <thead>
+            <th> Task Name </th>
+            <th> Task Time </th>
+        </thead>
+        <tbody id="completedtable">
+        </tbody>
+    </table>
+    <script>
+        taskid=1;
+        taskadd=document.getElementById("addtask");
+        tablebody=document.getElementById("tablebody");
+        taskname=document.getElementById("taskname");
+        tasktime=document.getElementById("tasktime");
+        taskadd.addEventListener("click",function(){
+            if(taskname.value!="" && tasktime.value!="")
+            {
+                var row="<tr id=\"task-"+taskid+"\" taskname=\""+taskname.value+"\" tasktime=\""+tasktime.value+"\">";
+                row+="<td>"+taskname.value+"</td>";
+                row+="<td>"+tasktime.value+"</td>";
+                row+="<td><button type=\"button\" onclick=\"deletetask("+taskid+");\"> Completed </button>";
+                row+="</tr>";
+                taskid+=1;
+                tablebody.innerHTML+=row;
+            }
+            else
+            {
+                alert("Enter Proper Values");
+            }
+        });
+        var ctable=document.getElementById("completedtable");
+        function deletetask(tid)
+        {
+            if(confirm("Are you sure want to mark this task as completed?"))
+            {
+                var row=document.getElementById("task-"+tid);
+                row.setAttribute("hidden",true);
+                var nrow="<tr>";
+                nrow+="<td>"+row.getAttribute("taskname")+"</td>";
+                nrow+="<td>"+row.getAttribute("tasktime")+"</td>";
+                nrow+="</tr>";
+                ctable.innerHTML+=nrow;
+            }
+        }
+    </script>
+</html>

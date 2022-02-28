@@ -1,0 +1,76 @@
+<html>
+<body>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background: red;
+            transition: width 2s, height 2s, transform 2s;
+        }
+
+        div:hover {
+            width: 300px;
+            height: 300px;
+            transform: rotate(180deg);
+        }
+    </style>
+    <label for="fromcurrency">Choose a <span style="color:blue;font-weight:bold">base currency</span>:</label>
+    <select id="fromcurrency">
+    </select>
+    <br />
+    <br />
+    <label for="tocurrency"></span> Choose a <span style="color:blue;font-weight:bold">currency</span>: </label>
+    <select id="tocurrency">
+    </select>
+    <br />
+    <br />
+    <input type="number" id="price">
+    <br />
+    <button type="button" id="convert" onclick="convert()">Convert</button>
+    <p style="color:rgb(255, 0, 0);font-weight:bold" id="output"></p>
+</body>
+<script>
+    var data = "";
+    window.addEventListener("load", function () {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            data = JSON.parse(this.responseText);
+            fc = document.getElementById("fromcurrency");
+            tc = document.getElementById("tocurrency");
+            for (let key in data) {
+                var option = "<option value=\"" + key + "\" >" + data[key] + "</option>";
+                fc.innerHTML += option;
+                tc.innerHTML += option;
+
+            }
+        };
+        xhttp.open("GET", "https://openexchangerates.org/api/currencies.json");
+        xhttp.send();
+
+    });
+    function convert() {
+
+        document.getElementById("convert").setAttribute("disabled", true);
+        p = document.getElementById("fromcurrency").value;
+        q = document.getElementById("tocurrency").value;
+        r = document.getElementById("price").value;
+        xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            data = JSON.parse(this.responseText);
+            usd = r / data.rates[p];
+            document.getElementById("output").innerHTML = usd * data.rates[q];
+            document.getElementById("convert").removeAttribute("disabled");
+
+
+        }
+        xhttp.open("GET", "https://openexchangerates.org/api/latest.json?app_id=34c8d96b93eb49a3876ef0578d2110c1");
+        xhttp.send();
+
+
+
+
+    }
+
+</script>
+
+</html>

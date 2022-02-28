@@ -1,0 +1,161 @@
+<html>
+<style>
+    h1 {
+        text-shadow: 2px 2px 8px #00ff6a;
+    }
+
+    table:hover {
+        text-shadow: 2px 2px 8px #ff0015;
+    }
+
+    img {
+        position: absolute;
+        left: 44%;
+        top: 0px;
+        z-index: -1;
+    }
+
+    .customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .customers td,
+    .customers th {
+        border: 1px solid rgb(221, 221, 221);
+        padding: 8px;
+    }
+
+    .customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .customers tr:hover {
+        background-color: #ddd;
+    }
+
+    .customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #0468aad5;
+        color: rgb(255, 255, 255);
+    }
+
+    button {
+        display: inline-block;
+        padding: 5px 15px;
+        font-size: 24px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4c93af;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px rgb(153, 153, 153);
+    }
+
+    button:hover {
+        background-color: #3e8e41
+    }
+
+    button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+</style>
+<h1>
+    <center>My Tasks</center>
+</h1>
+<br />
+<br />
+<center><img src="img.jfif" width="200" height="100"></center>
+<table class="customers" cellpadding="20">
+    <thead>
+        <th> Task Name </th>
+        <th> Task Time </th>
+        <th> Action </th>
+    </thead>
+    <tbody id="tablebody">
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<br />
+<h1>
+    <center><u>Add Tasks</u></center>
+</h1>
+<center>
+    <table class="customers" style="width: 50%; text-align: center;">
+        <tbody>
+            <tr>
+                <td>Task Name:</td>
+                <td><input type="text" id="taskname"></td>
+            </tr>
+            <tr>
+                <td>Task Time:</td>
+                <td><input type="datetime-local" id="tasktime"></td>
+            </tr>
+            <tr align="center">
+                <td colspan="2"><button type="button" id="addtask">Push Task</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+</center>
+
+<br />
+<br />
+<br />
+<br />
+<h1>
+    <center><u>Completed Tasks</u></center>
+</h1>
+<table class="customers" cellpadding="20">
+    <thead>
+        <th> Task Name </th>
+        <th> Task Time </th>
+    </thead>
+    <tbody id="completedtable">
+    </tbody>
+</table>
+<script>
+    taskid = 1;
+    taskadd = document.getElementById("addtask");
+    tablebody = document.getElementById("tablebody");
+    taskname = document.getElementById("taskname");
+    tasktime = document.getElementById("tasktime");
+    taskadd.addEventListener("click", function () {
+        if (taskname.value != "" && tasktime.value != "") {
+            var row = "<tr id=\"task-" + taskid + "\" taskname=\"" + taskname.value + "\" tasktime=\"" + tasktime.value + "\">";
+            row += "<td>" + taskname.value + "</td>";
+            row += "<td>" + tasktime.value + "</td>";
+            row += "<td><button type=\"button\" onclick=\"deletetask(" + taskid + ");\"> Done </button>";
+            row += "</tr>";
+            taskid += 1;
+            tablebody.innerHTML += row;
+        }
+        else {
+            alert("Enter Proper Values");
+        }
+    });
+    var ctable = document.getElementById("completedtable");
+    function deletetask(tid) {
+        if (confirm("Are you sure want to mark this task as completed?")) {
+            var row = document.getElementById("task-" + tid);
+            row.setAttribute("hidden", true);
+            var nrow = "<tr>";
+            nrow += "<td>" + row.getAttribute("taskname") + "</td>";
+            nrow += "<td>" + row.getAttribute("tasktime") + "</td>";
+            nrow += "</tr>";
+            ctable.innerHTML += nrow;
+        }
+    }
+</script>
+
+</html>
